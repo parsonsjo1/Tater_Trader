@@ -3,6 +3,7 @@ package com.joshwa.tater_trader;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -65,7 +66,8 @@ public class Login extends AppCompatActivity
     private View mLoginFormView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         //setContentView(R.layout.activity_login);
@@ -100,6 +102,18 @@ public class Login extends AppCompatActivity
             public void onClick(View view)
             {
                 attemptLogin();
+            }
+        });
+
+        Button mRegisterButton = (Button) findViewById(R.id.bRegister);
+        mRegisterButton.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                System.out.println("Login Register");
+                Intent intent = new Intent(Login.this, Register.class);
+                startActivity(intent);
             }
         });
 
