@@ -23,9 +23,13 @@ public class Register extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_register);
 
+        mFirstName = (EditText) findViewById(R.id.etFirstName);
+        mLastName = (EditText) findViewById(R.id.etLastName);
+        mEmail = (EditText) findViewById(R.id.etEmail);
         mPassword = (EditText) findViewById(R.id.etPassword);
         mConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
-        mConfirmPassword.addTextChangedListener(new TextWatcher() {
+        mConfirmPassword.addTextChangedListener(new TextWatcher()
+        {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -66,15 +70,17 @@ public class Register extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                if(!checkFields().equals(null))
+                User user = checkFields();
+                if(user != null)
                 {
                     System.out.println("Registering the user to the database");
                     //Send information to the server
                     // Show a progress spinner, and kick off a background task to
                     // perform the user login attempt.
                     //showProgress(true);
-                    //mAuthTask = new RegisterUserTask(email, password);
-                    //mAuthTask.execute((Void) null);
+                    RegisterUserTask mAuthTask = new RegisterUserTask(user);
+                    mAuthTask.execute((Void) null);
+                    finish();
                 }
             }
         });
