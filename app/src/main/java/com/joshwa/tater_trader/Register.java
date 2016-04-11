@@ -1,6 +1,7 @@
 package com.joshwa.tater_trader;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,6 +17,8 @@ public class Register extends AppCompatActivity
     private EditText mEmail;
     private EditText mPassword;
     private EditText mConfirmPassword;
+    private Button mRegister;
+    private String mResponseMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,6 +30,31 @@ public class Register extends AppCompatActivity
         mLastName = (EditText) findViewById(R.id.etLastName);
         mEmail = (EditText) findViewById(R.id.etEmail);
         mPassword = (EditText) findViewById(R.id.etPassword);
+        mPassword.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                String password = mPassword.getText().toString();
+                String confirmPassword = mConfirmPassword.getText().toString();
+
+                if(password.equals("") || confirmPassword.equals(""))
+                {
+                    mPassword.setHighlightColor(Color.TRANSPARENT);
+                    mConfirmPassword.setHighlightColor(Color.TRANSPARENT);
+                }
+            }
+        });
         mConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
         mConfirmPassword.addTextChangedListener(new TextWatcher()
         {
@@ -46,25 +74,30 @@ public class Register extends AppCompatActivity
                 String password = mPassword.getText().toString();
                 String confirmPassword = mConfirmPassword.getText().toString();
 
-                if(password.equals(confirmPassword) && mConfirmPassword.length() > 0)
+                if(password.equals(confirmPassword) && mConfirmPassword.length() > 0 && mPassword.length() > 0)
                 {
-                    mPassword.setBackgroundColor(Color.GREEN);
-                    mConfirmPassword.setBackgroundColor(Color.GREEN);
+                    mPassword.setHighlightColor(Color.GREEN);
+                    mConfirmPassword.setHighlightColor(Color.GREEN);
                 }
-                else if(mConfirmPassword.length() > 0)
+                else if(mConfirmPassword.length() > 0 && mPassword.length() > 0)
                 {
-                    mPassword.setBackgroundColor(Color.RED);
-                    mConfirmPassword.setBackgroundColor(Color.RED);
+                    mPassword.setHighlightColor(Color.RED);
+                    mConfirmPassword.setHighlightColor(Color.RED);
                 }
                 else
                 {
-                    mPassword.setBackgroundColor(Color.TRANSPARENT);
-                    mConfirmPassword.setBackgroundColor(Color.TRANSPARENT);
+                    mPassword.setHighlightColor(Color.TRANSPARENT);
+                    mConfirmPassword.setHighlightColor(Color.TRANSPARENT);
+                }
+                if(password.equals("") || confirmPassword.equals(""))
+                {
+                    mPassword.setHighlightColor(Color.TRANSPARENT);
+                    mConfirmPassword.setHighlightColor(Color.TRANSPARENT);
                 }
             }
         });
 
-        Button mRegister = (Button) findViewById(R.id.bRegister);
+        mRegister = (Button) findViewById(R.id.bRegister);
         mRegister.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -80,7 +113,6 @@ public class Register extends AppCompatActivity
                     //showProgress(true);
                     RegisterUserTask mAuthTask = new RegisterUserTask(user);
                     mAuthTask.execute((Void) null);
-                    finish();
                 }
             }
         });
@@ -95,14 +127,60 @@ public class Register extends AppCompatActivity
         String confirmPassword = mConfirmPassword.getText().toString();
 
         if(firstName.equals(""))
+        {
+            mFirstName.setError("First name cannot be blank");
             return null;
+        }
         if(lastName.equals(""))
+        {
+            mLastName.setError("Last name cannot be blank");
             return null;
+        }
         if(email.equals("") || !email.contains("@") || !email.contains(".com"))
+        {
+            mEmail.setError("Email cannot be blank and must contain '@' and '.com'");
             return null;
+        }
         if(!password.equals(confirmPassword))
+        {
+            mConfirmPassword.setError("Passwords do not match");
             return null;
+        }
 
         return new User(firstName, lastName, email, password);
+    }
+
+    public class RegisterUserTask extends AsyncTask<Void, Void, Boolean>
+    {
+        private User user;
+
+        public RegisterUserTask(User user)
+        {
+            this.user = user;
+        }
+
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            JSONResponse response = ServerProxy.getInstance().registerUser(user);
+            mResponseMessage = response.getMessage();
+
+            return response.isSuccess();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+
+            if(success)
+            {
+                finish();
+            }
+            else
+            {
+                mEmail.setError(mResponseMessage);
+            }
+        }
     }
 }

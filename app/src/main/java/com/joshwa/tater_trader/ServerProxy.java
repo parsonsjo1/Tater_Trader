@@ -1,5 +1,7 @@
 package com.joshwa.tater_trader;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,11 +45,11 @@ public class ServerProxy
      *
      * @param user
      */
-    public void registerUser(User user)
+    public JSONResponse registerUser(User user)
     {
         try
         {
-            url = new URL("http://ec2-52-90-159-103.compute-1.amazonaws.com:3010/user");
+            url = new URL("http://ec2-52-90-159-103.compute-1.amazonaws.com:3010/signup");
         }
         catch (MalformedURLException e)
         {
@@ -106,38 +108,93 @@ public class ServerProxy
             e.printStackTrace();
         }
 
-        final StringBuilder output = new StringBuilder("Request URL " + url);
-        output.append(System.getProperty("line.separator") + "Request Parameters " + jsonParam.toString());
-        output.append(System.getProperty("line.separator")  + "Response Code " + responseCode);
+
+
         BufferedReader br = null;
         try
         {
             br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String line = "";
-        StringBuilder responseOutput = new StringBuilder();
-        System.out.println("output===============" + br);
-        try
-        {
-            while((line = br.readLine()) != null )
-            {
-                responseOutput.append(line);
-            }
-            br.close();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
 
-        output.append(System.getProperty("line.separator") + "Response " + System.getProperty("line.separator") + System.getProperty("line.separator") + responseOutput.toString());
+        Gson gson = new Gson();
+        JSONResponse jsonResponse = gson.fromJson(br, JSONResponse.class);
+        return jsonResponse;
     }
 
-    public User getUser(User user)
+    public JSONResponse authenticate(User user)
     {
-        return null;
-    }
+        try
+        {
+            url = new URL("http://ec2-52-90-159-103.compute-1.amazonaws.com:3010/authenticate");
+        } catch (MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
 
+        HttpURLConnection connection = null;
+        JSONObject jsonParam = new JSONObject();
+        try
+        {
+            jsonParam.put("email", user.getEmailAddress());
+            jsonParam.put("password", user.getPassword());
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            connection = (HttpURLConnection) url.openConnection();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            connection.setRequestMethod("POST");
+        } catch (ProtocolException e)
+        {
+            e.printStackTrace();
+        }
+        //connection.setRequestProperty("USER-AGENT", "Mozilla/5.0");
+        //connection.setRequestProperty("ACCEPT-LANGUAGE", "en-US,en;0.5");
+        connection.setDoOutput(true);
+        connection.setUseCaches(false);
+        connection.setConnectTimeout(10000);
+        connection.setReadTimeout(10000);
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        int responseCode = 0; // getting the response code
+        try
+        {
+            connection.connect();
+            OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+            out.write(jsonParam.toString());
+            out.close();
+            responseCode = connection.getResponseCode();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        BufferedReader br = null;
+        try
+        {
+            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
+        JSONResponse jsonResponse = gson.fromJson(br, JSONResponse.class);
+        return jsonResponse;
+    }
 }
