@@ -15,13 +15,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class Feed2 extends AppCompatActivity {
+public class Feed2 extends AppCompatActivity{
     private GridView gridView;
     private GridViewAdapter gridAdapter;
     private FloatingActionButton mScannerButton;
@@ -38,6 +42,7 @@ public class Feed2 extends AppCompatActivity {
         gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
         gridView.setAdapter(gridAdapter);
 
+
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);
@@ -49,6 +54,11 @@ public class Feed2 extends AppCompatActivity {
 
                 //Start details activity
                 startActivity(intent);
+
+                gridAdapter = new GridViewAdapter(Feed2.this, R.layout.grid_item_layout, getData());
+                gridView.setAdapter(gridAdapter);
+                gridAdapter.notifyDataSetChanged();
+                gridView.invalidateViews();
             }
         });
 
@@ -60,6 +70,10 @@ public class Feed2 extends AppCompatActivity {
             {
                 Intent intent = new Intent(Feed2.this, BarcodeScanner.class);
                 startActivity(intent);
+                gridAdapter = new GridViewAdapter(Feed2.this, R.layout.grid_item_layout, getData());
+                gridView.setAdapter(gridAdapter);
+                gridAdapter.notifyDataSetChanged();
+                gridView.invalidateViews();
             }
         });
     }
@@ -84,6 +98,7 @@ public class Feed2 extends AppCompatActivity {
             //double price = prices[i];
             imageItems.add(new ImageItem(bitmap, title));
         }
+
         return imageItems;
     }
 

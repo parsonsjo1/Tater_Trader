@@ -73,8 +73,6 @@ public class BarcodeScanner extends AppCompatActivity
             if (success)
             {
                 //finish();
-                //Intent intent = new Intent(Login.this, BarcodeScanner.class);
-                //startActivity(intent);
 
             } else
             {
