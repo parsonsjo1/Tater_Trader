@@ -63,13 +63,15 @@ public class Feed2 extends AppCompatActivity {
         //String[] imgs = {"http://ecx.images-amazon.com/images/I/51GlnQ64EAL._SL160_.jpg", "https://www.gravatar.com/avatar/5ffb191914754e0c194211417999ca90?s=32&d=identicon&r=PG"};
         //double[] prices = {8.97, 98.98};
         //for (int i = 0; i < allItems.size(); i++) {
-        for(UPCInfo item : allItems){
+        for(UPCInfo item : allItems) {
             //Bitmap prebitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, -1));
             //Bitmap bitmap = scaleDownBitmap(prebitmap, 100, this);
-            String bitmap = item.getImageURL();
-            String title = item.getProductName();
-            //double price = prices[i];
-            imageItems.add(new ImageItem(bitmap, title));
+            if (item.getImageURL().length() > 4) {
+                String bitmap = item.getImageURL();
+                String title = item.getProductName();
+                //double price = prices[i];
+                imageItems.add(new ImageItem(bitmap, title));
+            }
         }
         return imageItems;
     }
