@@ -25,7 +25,6 @@
         </activity>
         <activity android:name=".Register" />
         <activity android:name=".BarcodeScanner"></activity>
-        <activity android:name=".Feed"></activity>
         <activity android:name=".Feed2"></activity>
         <activity android:name=".Details"/>
     </application>

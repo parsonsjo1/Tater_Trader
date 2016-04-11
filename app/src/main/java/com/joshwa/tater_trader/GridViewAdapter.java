@@ -42,7 +42,7 @@ public class GridViewAdapter extends ArrayAdapter<ImageItem> {
             holder = new ViewHolder();
             holder.imageTitle = (TextView) row.findViewById(R.id.text);
             holder.image = (ImageView) row.findViewById(R.id.image);
-            //holder.imagePrice = (TextView) row.findViewbyId(R.id.text);
+            //holder.imagePrice = (TextView) row.findViewById(R.id.price);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -52,14 +52,14 @@ public class GridViewAdapter extends ArrayAdapter<ImageItem> {
         ImageItem item = data.get(position);
         holder.imageTitle.setText(item.getTitle());
         holder.image.setImageBitmap(getBitmapFromURL(item.getImage()));
-        holder.imagePrice.setText("$" + item.getPrice());
+        //holder.imagePrice.setText("$" + item.getPrice());
         return row;
     }
 
     static class ViewHolder {
         TextView imageTitle;
         ImageView image;
-        TextView imagePrice;
+        //TextView imagePrice;
     }
 
     public static Bitmap getBitmapFromURL(String src) {

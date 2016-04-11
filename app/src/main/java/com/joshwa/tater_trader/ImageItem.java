@@ -6,13 +6,13 @@ public class ImageItem {
     //private Bitmap image;
     private String image;
     private String title;
-    private double price;
+    //private double price;
 
-    public ImageItem(String image, String title, double price) {
+    public ImageItem(String image, String title) {
         super();
         this.image = image;
         this.title = title;
-        this.price = price;
+        //this.price = price;
     }
 
     public String getImage() {
@@ -31,7 +31,7 @@ public class ImageItem {
         this.title = title;
     }
 
-    public double getPrice() { return price; }
+    //public double getPrice() { return price; }
 
-    public void setPrice(double price) { this.price = price; }
+   // public void setPrice(double price) { this.price = price; }
 }
