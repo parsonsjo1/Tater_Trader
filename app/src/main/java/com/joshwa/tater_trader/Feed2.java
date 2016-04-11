@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -69,14 +70,17 @@ public class Feed2 extends AppCompatActivity {
     private ArrayList<ImageItem> getData() {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
         //TypedArray imgs = getResources().obtainTypedArray(R.array.image_ids);
-        String[] titles = {"Nature Valley Sweet & Salty Nut - Peanut Granola Bar (16 Bars)", "second cool image"};
-        String[] imgs = {"http://ecx.images-amazon.com/images/I/51GlnQ64EAL._SL160_.jpg", "https://www.gravatar.com/avatar/5ffb191914754e0c194211417999ca90?s=32&d=identicon&r=PG"};
+        ServerProxy server = ServerProxy.getInstance();
+        List<UPCInfo> allItems = server.getUPCInfo();
+        //String[] titles = {"Nature Valley Sweet & Salty Nut - Peanut Granola Bar (16 Bars)", "second cool image"};
+        //String[] imgs = {"http://ecx.images-amazon.com/images/I/51GlnQ64EAL._SL160_.jpg", "https://www.gravatar.com/avatar/5ffb191914754e0c194211417999ca90?s=32&d=identicon&r=PG"};
         //double[] prices = {8.97, 98.98};
-        for (int i = 0; i < imgs.length; i++) {
+        //for (int i = 0; i < allItems.size(); i++) {
+        for(UPCInfo item : allItems){
             //Bitmap prebitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, -1));
             //Bitmap bitmap = scaleDownBitmap(prebitmap, 100, this);
-            String bitmap = imgs[i];
-            String title = titles[i];
+            String bitmap = item.getImageURL();
+            String title = item.getProductName();
             //double price = prices[i];
             imageItems.add(new ImageItem(bitmap, title));
         }
