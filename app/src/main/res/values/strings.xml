@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tater_Trader</string>
+    <string name="app_name">Tater Trader</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_register">Register</string>
@@ -17,4 +17,25 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string-array name="image_ids">
+        <item>@drawable/sample_0</item>
+        <item>@drawable/sample_1</item>
+        <item>@drawable/sample_2</item>
+        <item>@drawable/sample_3</item>
+        <item>@drawable/sample_4</item>
+        <item>@drawable/sample_5</item>
+        <item>@drawable/sample_6</item>
+        <item>@drawable/sample_7</item>
+        <!--<item>@drawable/image_9</item>-->
+        <!--<item>@drawable/image_1</item>-->
+        <!--<item>@drawable/image_2</item>-->
+        <!--<item>@drawable/image_3</item>-->
+        <!--<item>@drawable/image_4</item>-->
+        <!--<item>@drawable/image_5</item>-->
+        <!--<item>@drawable/image_6</item>-->
+        <!--<item>@drawable/image_7</item>-->
+        <!--<item>@drawable/image_8</item>-->
+        <!--<item>@drawable/image_9</item>-->
+    </string-array>
 </resources>

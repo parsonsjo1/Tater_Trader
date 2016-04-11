@@ -362,7 +362,8 @@ public class Login extends AppCompatActivity
             if (success)
             {
                 finish();
-                Intent intent = new Intent(Login.this, BarcodeScanner.class);
+                //Intent intent = new Intent(Login.this, BarcodeScanner.class);
+                Intent intent = new Intent(Login.this, Feed2.class);
                 startActivity(intent);
 
             } else
