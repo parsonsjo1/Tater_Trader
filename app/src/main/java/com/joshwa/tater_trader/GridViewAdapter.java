@@ -1,9 +1,16 @@
 package com.joshwa.tater_trader;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +42,7 @@ public class GridViewAdapter extends ArrayAdapter<ImageItem> {
             holder = new ViewHolder();
             holder.imageTitle = (TextView) row.findViewById(R.id.text);
             holder.image = (ImageView) row.findViewById(R.id.image);
+            //holder.imagePrice = (TextView) row.findViewbyId(R.id.text);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -43,12 +51,29 @@ public class GridViewAdapter extends ArrayAdapter<ImageItem> {
 
         ImageItem item = data.get(position);
         holder.imageTitle.setText(item.getTitle());
-        holder.image.setImageBitmap(item.getImage());
+        holder.image.setImageBitmap(getBitmapFromURL(item.getImage()));
+        holder.imagePrice.setText("$" + item.getPrice());
         return row;
     }
 
     static class ViewHolder {
         TextView imageTitle;
         ImageView image;
+        TextView imagePrice;
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
     }
 }
