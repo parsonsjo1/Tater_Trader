@@ -1,6 +1,9 @@
 package com.joshwa.tater_trader;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -196,5 +200,76 @@ public class ServerProxy
         Gson gson = new Gson();
         JSONResponse jsonResponse = gson.fromJson(br, JSONResponse.class);
         return jsonResponse;
+    }
+
+    public UPCInfo getUPCInfo(String upc)
+    {
+        try
+        {
+            url = new URL("http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&access_token=A5596BD1-3624-42E2-A8CD-E5053BE97F07&upc=" + upc);
+        } catch (MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
+
+        HttpURLConnection connection = null;
+
+        try
+        {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+        }
+        catch (ProtocolException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        connection.setRequestProperty("Content-length", "0");
+        connection.setUseCaches(false);
+        connection.setAllowUserInteraction(false);
+        connection.setConnectTimeout(10000);
+        connection.setReadTimeout(10000);
+
+        int responseCode = 0; // getting the response code
+        try
+        {
+            connection.connect();
+            responseCode = connection.getResponseCode();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        BufferedReader br = null;
+        String jsonString = null;
+        try
+        {
+            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            jsonString = org.apache.commons.io.IOUtils.toString(br);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        JSONObject json = null;
+        Gson gson = new Gson();
+        UPCInfo upcInfo = null;
+        try
+        {
+             json = new JSONObject(jsonString);
+            upcInfo = gson.fromJson(json.getString("0"), UPCInfo.class);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        return upcInfo;
     }
 }
