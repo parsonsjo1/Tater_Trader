@@ -13,6 +13,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.StrictMode;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +23,7 @@ import android.widget.GridView;
 public class Feed2 extends AppCompatActivity {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
+    private FloatingActionButton mScannerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,17 @@ public class Feed2 extends AppCompatActivity {
                 intent.putExtra("image", getBitmapFromURL(item.getImage()));
 
                 //Start details activity
+                startActivity(intent);
+            }
+        });
+
+        mScannerButton = (FloatingActionButton) findViewById(R.id.abScanner);
+        mScannerButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Feed2.this, BarcodeScanner.class);
                 startActivity(intent);
             }
         });
